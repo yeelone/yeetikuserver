@@ -12,3 +12,13 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+
+my.db
+my.db.lock
+*go_linux_amd64
+
+idea
+vscode
+upload
+
