@@ -1,0 +1,13 @@
+{
+  "host": "http://localhost:8080",
+  "port": 8080,
+  "db":"localhost:5432",
+  "db_name":"elone",
+  "db_user":"elone",
+  "db_password":"123456",
+  "admin_account":"admin@yeetiku.com",
+  "admin_default_password":"123456",
+  "guest_account":"guest@yeetiku.com",
+  "guest_default_password":"123456",
+  "public_salt": "nXweu8Jq44FgEfgM1Pv4xH51"
+}
