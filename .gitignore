@@ -18,8 +18,8 @@ my.db
 my.db.lock
 *go_linux_amd64
 
-idea
-vscode
+.idea/
+.vscode/
 upload
 download/temp/
 

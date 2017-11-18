@@ -138,7 +138,7 @@ func (t Bank) DeleteQuestions(questions []uint64) (err error) {
 }
 
 func (t Bank) Get() (item Bank) {
-	mydb.Select("id,creator,name,limited,description,disable,image,allow_type").First(&item, t.ID)
+	mydb.Select("id,creator,name,limited,description,disable,image,allow_type,created_at,updated_at").First(&item, t.ID)
 	switch item.AllowType {
 	case "groups":
 		mydb.Model(&item).Association("Groups").Find(&item.Groups)
@@ -170,7 +170,7 @@ func (t Bank) GetRelatedQuestions(start, page, pageSize uint64) (qs []Question, 
 //GetAll :
 func (t Bank) GetAll(page, pageSize uint64, where string, whereKeyword string) (banks []Bank, total int) {
 	var offset = (page - 1) * pageSize
-	fieldsStr := "id,name,description,disable,limited,image,total,allow_type" //默认情况下请求的字段
+	fieldsStr := "id,name,description,disable,limited,image,total,allow_type,created_at,updated_at" //默认情况下请求的字段
 
 	m := mydb.Select(fieldsStr)
 	if len(where) > 0 {
@@ -192,7 +192,7 @@ func (t Bank) GetAll(page, pageSize uint64, where string, whereKeyword string) (
 //GetAllEnable : get banks which is enable
 func (t Bank) GetAllEnable(page, pageSize uint64, where string, whereKeyword string) (banks []Bank, total int) {
 	var offset = (page - 1) * pageSize
-	fieldsStr := "id,name,description,disable,limited,image,total,allow_type" //默认情况下请求的字段
+	fieldsStr := "id,name,description,disable,limited,image,total,allow_type,created_at,updated_at" //默认情况下请求的字段
 
 	m := mydb.Select(fieldsStr)
 	if len(where) > 0 {
@@ -214,7 +214,7 @@ func (t Bank) GetAllEnable(page, pageSize uint64, where string, whereKeyword str
 //GetByUser : 查看用户正在练习或练习的题库
 func (t Bank) GetByUser(page, pageSize, userID uint64) (banks []Bank, total int, err error) {
 	var offset = (page - 1) * pageSize
-	fieldsStr := "id,name,description,disable,limited,image,total,allow_type" //默认情况下请求的字段
+	fieldsStr := "id,name,description,disable,limited,image,total,allow_type,created_at,updated_at" //默认情况下请求的字段
 
 	records, total, _ := BankRecords{UserID: userID}.GetByUser(page, pageSize)
 
@@ -292,12 +292,12 @@ func (t Bank) SaveImage() error {
 func (t *Bank) MarshalJSON() ([]byte, error) {
 	type Alias Bank
 	return json.Marshal(&struct {
-		CreatedAt string `json:"create_time"`
-		UpdatedAt string `json:"update_time"`
+		CreatedAt string `json:"createdAt"`
+		UpdatedAt string `json:"updatedAt"`
 		*Alias
 	}{
-		CreatedAt: t.CreatedAt.Format("2006-01-02 15:04:05"),
-		UpdatedAt: t.UpdatedAt.Format("2006-01-02 15:04:05"),
+		CreatedAt: t.CreatedAt.Format("2006-01-02"),
+		UpdatedAt: t.UpdatedAt.Format("2006-01-02"),
 		Alias:     (*Alias)(t),
 	})
 }

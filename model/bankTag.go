@@ -71,7 +71,7 @@ func (t Btags) GetRelatedBanks(page, pageSize uint64) (banks []Bank, total int) 
 		rows.Scan(&bank)
 		bankIDs = append(bankIDs, bank)
 	}
-	fieldsStr := "id,name,description,disable,limited,image,total,allow_type" //默认情况下请求的字段
+	fieldsStr := "id,name,description,disable,limited,image,total,allow_type,created_at,updated_at" //默认情况下请求的字段
 	if err := mydb.Select(fieldsStr).Where("id IN (?)  AND disable=false ", bankIDs).Find(&banks).Error; err != nil {
 		return banks, 0
 	}
@@ -202,7 +202,6 @@ func (t Btags) GetChild(id uint64) []uint64 {
 	for _, value := range level {
 		ids = append(ids, value.ID)
 	}
-	fmt.Println("ids", ids)
 	return ids
 }
 func (t *Btags) MarshalJSON() ([]byte, error) {
@@ -228,8 +227,6 @@ type TagsTree struct {
 
 func (t TagsTree) generateTree(parent string) (tree []TagsTree) {
 	sql := `select id,parent,level,branch from connectby('btags','id','parent','` + parent + `',0,'~') as t(id bigint, parent bigint,level integer ,branch text);`
-	fmt.Println(sql)
 	mydb.Raw(sql).Scan(&tree)
-	fmt.Printf("%+v \n ", tree)
 	return tree
 }

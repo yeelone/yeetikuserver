@@ -171,7 +171,7 @@ func (u User) ResetPassword(email, password string) (err error) {
 func (u *User) MarshalJSON() ([]byte, error) {
 	type Alias User
 	return json.Marshal(&struct {
-		CreatedAt string `json:"createtime"`
+		CreatedAt string `json:"createTime"`
 		UpdatedAt string `json:"updateTime"`
 		Password  string `json:"password,omitempty" gorm:"not null"`
 		Salt      string `json:"salt,omitempty"`
