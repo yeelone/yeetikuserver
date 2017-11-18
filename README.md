@@ -12,11 +12,14 @@ YeeTiku分为三个部分：
 
 react native 发布在expo上，有兴趣的朋友可以前往体验：
 https://expo.io/@yeelone/yeetiku
+
 ![image](https://wx3.sinaimg.cn/mw1024/6547935dgy1flmm1qu1nnj20e1062t8o.jpg)
 
 
 APP截图：
+
 ![image](https://wx4.sinaimg.cn/mw690/6547935dgy1flmmcbufv8j20fq0drwfg.jpg)
+
 ![image](https://wx1.sinaimg.cn/mw1024/6547935dgy1flmmcbu30ij20fi0dk0tu.jpg)
 
 #### Basic usage

@@ -18,6 +18,7 @@ my.db
 my.db.lock
 *go_linux_amd64
 
+.expo/
 .idea/
 .vscode/
 upload
