@@ -1,9 +1,9 @@
 package utils
 
 import (
-	c "../config"
 	"crypto/md5"
 	"fmt"
+	c "yeetikuserver/config"
 )
 
 // 加密密码，md5(md5(password + salt) + public_salt)

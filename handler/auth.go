@@ -6,9 +6,10 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"../db"
-	"../model"
-	"../utils"
+	"yeetikuserver/db"
+	"yeetikuserver/model"
+	"yeetikuserver/utils"
+
 	"github.com/julienschmidt/httprouter"
 	log "github.com/sirupsen/logrus"
 )

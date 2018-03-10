@@ -4,8 +4,9 @@ import (
 	"net/http"
 	"regexp"
 
-	c "../config"
-	"../utils"
+	c "yeetikuserver/config"
+	"yeetikuserver/utils"
+
 	"github.com/auth0/go-jwt-middleware"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/urfave/negroni"

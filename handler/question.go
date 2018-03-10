@@ -11,8 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"../model"
-	"../utils"
+	"yeetikuserver/model"
+	"yeetikuserver/utils"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/tealeg/xlsx"
 )

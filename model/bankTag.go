@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"../utils"
+	"yeetikuserver/utils"
+
 	log "github.com/sirupsen/logrus"
 )
 

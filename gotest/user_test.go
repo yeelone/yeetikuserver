@@ -2,11 +2,12 @@ package gotest
 
 import (
 	"testing"
-	"../model"
+	"yeetikuserver/model"
 )
+
 func Test_GetByUser_2(t *testing.T) {
 	g := &model.QuestionRecord{}
-	if result,err  := g.GetByUser(13); err != nil { //try a unit test on function
+	if result, err := g.GetByUser(13); err != nil { //try a unit test on function
 		t.Error(err)
 		t.Error("根据用户ID获取练习记录测试没通过") // 如果不是如预期的那么就报错
 	} else {

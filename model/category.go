@@ -5,7 +5,7 @@ import (
 	"errors"
 	"strings"
 
-	"../utils"
+	"yeetikuserver/utils"
 )
 
 type Category struct {

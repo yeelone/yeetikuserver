@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"../model"
-	"../utils"
+	"yeetikuserver/model"
+	"yeetikuserver/utils"
+
 	"github.com/julienschmidt/httprouter"
 )
 

@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	c "../config"
+	c "yeetikuserver/config"
+
 	"github.com/dgrijalva/jwt-go"
 )
 

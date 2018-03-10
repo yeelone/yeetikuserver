@@ -3,7 +3,8 @@ package db
 import (
 	"sync"
 
-	c "../config"
+	c "yeetikuserver/config"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	log "github.com/sirupsen/logrus"

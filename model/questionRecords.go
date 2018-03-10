@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"../utils"
+	"yeetikuserver/utils"
 )
 
 //QuestionRecord ： 记录用户答题情况

@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"../model"
-	"../utils"
+	"yeetikuserver/model"
+	"yeetikuserver/utils"
+
 	"github.com/julienschmidt/httprouter"
 )
 

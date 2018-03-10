@@ -5,7 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"../utils"
+	"yeetikuserver/utils"
+
 	"github.com/pborman/uuid"
 )
 

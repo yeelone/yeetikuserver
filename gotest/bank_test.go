@@ -3,7 +3,7 @@ package gotest
 import (
 	"testing"
 
-	"../model"
+	"yeetikuserver/model"
 )
 
 func Test_GetByUser_1(t *testing.T) {

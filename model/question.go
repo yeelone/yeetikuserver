@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"../utils"
+	"yeetikuserver/utils"
 )
 
 var QLevel = map[string]int64{"easy": 1, "normal": 2, "hard": 3}

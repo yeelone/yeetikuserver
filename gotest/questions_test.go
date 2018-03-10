@@ -3,8 +3,9 @@ package gotest
 import (
 	"testing"
 
+	"yeetikuserver/model"
+
 	"../handler"
-	"../model"
 )
 
 func Test_GetUserFavorites_3(t *testing.T) {

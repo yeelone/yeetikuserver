@@ -1,8 +1,9 @@
 package model
 
 import (
-	"../config"
-	"../db"
+	"yeetikuserver/config"
+	"yeetikuserver/db"
+
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 )

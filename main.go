@@ -7,10 +7,12 @@ import (
 	"os"
 	"strconv"
 
-	"./config"
-	h "./handler"
-	m "./middleware"
-	"./model"
+	"yeetikuserver/config"
+
+	h "yeetikuserver/handler"
+	m "yeetikuserver/middleware"
+	"yeetikuserver/model"
+
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"

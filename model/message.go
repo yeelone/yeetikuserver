@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"../utils"
+	"yeetikuserver/utils"
 )
 
 type QuestionImportMessage struct {

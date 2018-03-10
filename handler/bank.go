@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"../model"
-	"../utils"
+	"yeetikuserver/model"
+	"yeetikuserver/utils"
+
 	"github.com/julienschmidt/httprouter"
 	log "github.com/sirupsen/logrus"
 )
