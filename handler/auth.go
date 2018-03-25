@@ -32,7 +32,7 @@ func AdminLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			b, err = json.Marshal(response)
 
 			//保存session
-			err := db.KVManager{}.Set(utils.Uint2Str(u.ID), response.Token)
+			err := db.KVManager{}.Set(db.SESSIONBUCKET, utils.Uint2Str(u.ID), response.Token)
 			if err != nil {
 				log.Warn("保存session出现错误 : " + err.Error())
 			}
@@ -65,6 +65,7 @@ func AdminLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+// Login : 登录
 func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -77,14 +78,13 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if u.Valid(u.Email, u.Password) {
 		response := Response{}.Default()
 		response.Body["user"] = u
-		response.Body["username"] = "elone"
 		response.Body["id"] = u.ID
 		response.Token = utils.SetJWTToken(u.ID)
 		b, err = json.Marshal(response)
 
 		fmt.Printf("json b %s \n ", b)
 		//保存session
-		err := db.KVManager{}.Set(utils.Uint2Str(u.ID), response.Token)
+		err := db.KVManager{}.Set(db.SESSIONBUCKET, utils.Uint2Str(u.ID), response.Token)
 		if err != nil {
 			log.Warn("保存session出现错误 : " + err.Error())
 		}
@@ -109,13 +109,14 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//Logout : 登出
 func Logout(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
 	ctx := r.Context()
 	userid := utils.GetUserInfoFromContext(ctx)
 	//保存session
-	err = db.KVManager{}.Delete(utils.Uint2Str(userid))
+	err = db.KVManager{}.Delete(db.SESSIONBUCKET, utils.Uint2Str(userid))
 	response := Response{}.Default()
 	response.Status = http.StatusUnauthorized
 	response.Code = StatusUnauthorized
@@ -131,6 +132,7 @@ func Logout(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+// Register : 注册
 func Register(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var u model.User

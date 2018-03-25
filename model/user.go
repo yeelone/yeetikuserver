@@ -2,9 +2,10 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"strings"
 	"time"
-
+	db "yeetikuserver/db"
 	"yeetikuserver/utils"
 
 	"github.com/pborman/uuid"
@@ -30,9 +31,25 @@ type User struct {
 	UpdatedAt       time.Time
 }
 
-func (u User) Get() (result User) {
-	mydb.First(&result, u.ID)
-	return result
+func (u User) Get() (result User, err error) {
+	if u.ID > 0 {
+		value, err := kvdb.Get(db.USERBUCKET, string(u.ID))
+		if err != nil {
+			err = json.Unmarshal(value, &result)
+			return result, nil
+		}
+	}
+
+	if mydb.First(&result, u.ID).Error != nil {
+		encoded, err := json.Marshal(result)
+		if err != nil {
+			return result, nil
+		}
+		kvdb.Set(db.USERBUCKET, string(result.ID), string(encoded))
+	} else {
+		return result, errors.New("cannot find any user")
+	}
+	return result, nil
 }
 
 //GetAll :
@@ -57,8 +74,8 @@ func (u User) GetAll(page, pageSize uint64, filterBy string, filterID uint64, wh
 		}
 	} else {
 		if len(where) > 0 {
-			mydb.Select(fieldsStr).Offset(offset).Limit(pageSize).Where(where+" = ?", whereKeyword).Find(&users)
-			mydb.Model(u).Where(where+" ?", whereKeyword).Count(&total)
+			mydb.Select(fieldsStr).Offset(offset).Limit(pageSize).Where(where+" LIKE  ?", "%"+whereKeyword+"%").Find(&users)
+			mydb.Model(u).Where(where+" LIKE  ?", "%"+whereKeyword+"%").Count(&total)
 		} else {
 			mydb.Select(fieldsStr).Offset(offset).Limit(pageSize).Find(&users)
 			mydb.Model(u).Count(&total)
@@ -144,10 +161,7 @@ func (u User) IsIDAdmin(id uint64) bool {
 
 //SetAvatar :
 func (u User) SetAvatar() (err error) {
-	if err = mydb.Model(&u).Update("avatar", u.Avatar).Error; err != nil {
-		return err
-	}
-	return nil
+	return mydb.Model(&u).Update("avatar", u.Avatar).Error
 }
 
 // CheckPassword  : check the user's password
@@ -163,10 +177,7 @@ func (u User) ResetPassword(email, password string) (err error) {
 	}
 
 	u.Password = utils.EncryptPassword(password, u.Salt)
-	if err = mydb.Model(&u).Update("password", u.Password).Error; err != nil {
-		return err
-	}
-	return nil
+	return mydb.Model(&u).Update("password", u.Password).Error
 }
 
 func (u *User) MarshalJSON() ([]byte, error) {

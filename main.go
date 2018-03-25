@@ -32,7 +32,7 @@ func (df *DefaultFieldsHook) Levels() []log.Level {
 }
 
 var runServer = true
-var defaultPort = flag.Int("port", 0, "designated ports")
+var defaultPort = flag.Int("port", 8080, "designated ports")
 var resetAdminPassword = flag.String("reset-admin-password", "", "reset admin password")
 var configFile = flag.String("config", "", "specified config file")
 
@@ -134,6 +134,7 @@ func main() {
 	router.POST("/api/v1/questions", h.SaveQuestion)
 	router.PUT("/api/v1/questions", h.SaveQuestion)
 	router.DELETE("/api/v1/questions", h.DeleteQuestion)
+	router.GET("/api/v1/questions/:id/comments", h.GetQuestionComments)
 
 	router.POST("/api/v1/import/questions", h.ImportFromExcel)
 	// router.GET("/api/v1/import/questions/users/:id/result", h.ImportQuestionResult)
@@ -145,6 +146,11 @@ func main() {
 	router.POST("/api/v1/client/config", h.SaveAppConfig)
 	router.POST("/api/v1/client/splash/upload", h.UploadClientSplashImage)
 	router.POST("/api/v1/client/icon/upload", h.UploadClientIconImage)
+
+	router.GET("/api/v1/comments/all", h.GetALlComments)
+	router.GET("/api/v1/comments/parent/:id", h.GetChilrenComments)
+	router.DELETE("/api/v1/comments", h.DeleteComments)
+	router.POST("/api/v1/comments", h.CreateComments)
 	n.UseHandler(router)
 	//defer  db.GetInstance().Close()
 	if runServer {

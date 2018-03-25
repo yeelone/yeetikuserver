@@ -3,6 +3,7 @@ package model
 import (
 	"yeetikuserver/config"
 	"yeetikuserver/db"
+	"yeetikuserver/utils"
 
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
@@ -28,7 +29,11 @@ func InitDatabaseTable() {
 	var favoritesQuestions QuestionFavorites
 	var feedback Feedback
 	var bankTag Btags
-	mydb.AutoMigrate(&user, &group, &bank, &bankTag, &tag, &category, &question, &answerOption, &options, &records, &questionRecords, &favoritesQuestions, &feedback)
+	var comments Comments
+	mydb.AutoMigrate(&user, &group, &bank, &bankTag, &tag,
+		&category, &question, &answerOption, &options,
+		&records, &questionRecords, &favoritesQuestions,
+		&feedback, &comments)
 	initAdmin()
 	initGuest()
 }
@@ -61,4 +66,26 @@ func initGuest() {
 		u.IsSuper = false
 		u.Save()
 	}
+}
+
+type Tree struct {
+	ID     uint64
+	Parent uint64
+	Level  int
+	Branch string
+}
+
+func (t Tree) generateTree(tablename, parent string) (tree []Tree) {
+	sql := `select id,parent,level,branch from connectby('` + tablename + `','id','parent','` + parent + `',0,'~') as t(id bigint, parent bigint,level integer ,branch text);`
+	mydb.Raw(sql).Scan(&tree)
+	return tree
+}
+
+func (t Tree) GetChilrenID(tablename string, parent uint64) []uint64 {
+	level := t.generateTree(tablename, utils.Uint2Str(parent))
+	var ids []uint64
+	for _, value := range level {
+		ids = append(ids, value.ID)
+	}
+	return ids
 }

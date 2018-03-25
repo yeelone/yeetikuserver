@@ -13,6 +13,7 @@ import (
 var once sync.Once
 var dbInstance *gorm.DB
 
+// GetInstance : 获取数据库实例
 func GetInstance() *gorm.DB {
 	once.Do(func() {
 		if dbInstance == nil {
@@ -23,6 +24,8 @@ func GetInstance() *gorm.DB {
 			if err != nil {
 				log.Fatal("failed to connect database:", err)
 				panic("failed to connect database")
+			} else {
+				log.Println("db connected")
 			}
 		}
 	})

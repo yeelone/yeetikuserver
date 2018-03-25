@@ -10,15 +10,17 @@ import (
 
 var synconce sync.Once
 var kdvInstance *bolt.DB
-var SESSIONNAME = []byte("sessions")
 
+// KVManager : boltdb 管理器
 type KVManager struct {
 }
 
+// GetKVInstance 获取boltdb实例
 func GetKVInstance() *KVManager {
 	return &KVManager{}
 }
 
+// Init 初始化 boltdb
 func (s KVManager) Init() {
 
 	synconce.Do(func() {
@@ -32,9 +34,13 @@ func (s KVManager) Init() {
 	})
 }
 
-func (s KVManager) Set(key, value string) error {
+// Set 设置键值
+// @params bucketname  数据表名
+// @params key
+// @params value
+func (s KVManager) Set(bucketName []byte, key, value string) error {
 	err := kdvInstance.Update(func(tx *bolt.Tx) error {
-		b, err := tx.CreateBucketIfNotExists(SESSIONNAME)
+		b, err := tx.CreateBucketIfNotExists(bucketName)
 		if err != nil {
 			return err
 		}
@@ -43,23 +49,29 @@ func (s KVManager) Set(key, value string) error {
 	return err
 }
 
-func (s KVManager) Delete(key string) (err error) {
+// Delete 删除键
+// @params bucketName
+// key
+func (s KVManager) Delete(bucketName []byte, key string) (err error) {
 	if err = kdvInstance.Update(func(tx *bolt.Tx) error {
-		return tx.Bucket(SESSIONNAME).Delete([]byte(key))
+		return tx.Bucket(bucketName).Delete([]byte(key))
 	}); err != nil {
 		log.Fatal(err)
 	}
 	return err
 }
 
-func (s KVManager) Get(id string) (value []byte, err error) {
+// Get 获取值
+// @params bucketname
+// @params key
+func (s KVManager) Get(bucketName []byte, key string) (value []byte, err error) {
 	err = kdvInstance.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(SESSIONNAME)
+		b := tx.Bucket(bucketName)
 		if b == nil {
-			return fmt.Errorf("Bucket %q not found!", SESSIONNAME)
+			return fmt.Errorf("bucket %q not found", bucketName)
 		}
 
-		value = b.Get([]byte(id))
+		value = b.Get([]byte(key))
 		return nil
 	})
 	return value, nil

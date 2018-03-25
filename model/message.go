@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
+	db "yeetikuserver/db"
 	"yeetikuserver/utils"
 )
 
@@ -24,20 +25,20 @@ func (qm QuestionImportMessage) Save() error {
 		return err
 	}
 	id := utils.Uint2Str(qm.UserID)
-	kvdb.Set(id, string(encoded))
+	kvdb.Set(db.SESSIONBUCKET, id, string(encoded))
 
 	return nil
 }
 
 func (qm QuestionImportMessage) Query() (msg QuestionImportMessage, err error) {
 	id := utils.Uint2Str(qm.UserID)
-	value, err := kvdb.Get(id)
+	value, err := kvdb.Get(db.SESSIONBUCKET, id)
 	err = json.Unmarshal(value, &msg)
 	return msg, err
 }
 
 func (qm QuestionImportMessage) Remove() (err error) {
 	id := utils.Uint2Str(qm.UserID)
-	err = kvdb.Delete(id)
+	err = kvdb.Delete(db.SESSIONBUCKET, id)
 	return err
 }

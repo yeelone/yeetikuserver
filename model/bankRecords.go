@@ -27,7 +27,7 @@ func (r BankRecords) GetAll(page, pageSize uint64) (records []BankRecords, total
 
 	for index, item := range records {
 		if item.UserID > 0 {
-			records[index].User = User{ID: item.UserID}.Get()
+			records[index].User, _ = User{ID: item.UserID}.Get()
 		}
 	}
 	return records, total

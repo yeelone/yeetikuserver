@@ -63,7 +63,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	r.Body.Close()
 	json.Unmarshal([]byte(result), &m)
 
-	user := model.User{ID: utils.GetUserInfoFromContext(r.Context())}.Get()
+	user, _ := model.User{ID: utils.GetUserInfoFromContext(r.Context())}.Get()
 	if result := user.CheckPassword(m.OldPassword); result != true {
 		response.Status = http.StatusNotAcceptable
 		response.Code = StatusNotAcceptable
@@ -175,7 +175,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Message = "cannot log in "
 	} else {
 		user := model.User{ID: id}
-		response.Body["user"] = user.Get()
+		response.Body["user"], _ = user.Get()
 	}
 
 	b, err = json.Marshal(response)
@@ -212,7 +212,7 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	userid := utils.GetUserInfoFromContext(r.Context())
 
 	user := model.User{ID: userid}
-	response.Body["user"] = user.Get()
+	response.Body["user"], _ = user.Get()
 
 	b, err = json.Marshal(response)
 	if err != nil {
@@ -344,9 +344,9 @@ func ResetPasswordUser(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 
 	m := model.User{}
 	m.ID = currentUserID
-	currentUser := m.Get()
+	currentUser, _ := m.Get()
 	m.ID = userID
-	user := m.Get()
+	user, _ := m.Get()
 
 	if currentUser.ID == user.ID { //是用户本人
 		err = m.ResetPassword(user.Email, "123456")

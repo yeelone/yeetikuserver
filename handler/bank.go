@@ -238,7 +238,6 @@ func RemoveBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Message = "无权删除，您非题库创建者，请停止操作"
 	}
 
-	fmt.Printf("%+v \n ", response)
 	b, err = json.Marshal(response)
 	if err != nil {
 		fmt.Println("errors :", err)

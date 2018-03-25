@@ -5,7 +5,7 @@ import (
 
 	"yeetikuserver/model"
 
-	"../handler"
+	"yeetikuserver/handler"
 )
 
 func Test_GetUserFavorites_3(t *testing.T) {
