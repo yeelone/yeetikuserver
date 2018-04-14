@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -213,16 +214,16 @@ func (t Bank) GetAllEnable(page, pageSize uint64, where string, whereKeyword str
 
 //GetByUser : 查看用户正在练习或练习的题库
 func (t Bank) GetByUser(page, pageSize, userID uint64) (banks []Bank, total int, err error) {
-	var offset = (page - 1) * pageSize
 	fieldsStr := "id,name,description,disable,limited,image,total,allow_type,created_at,updated_at" //默认情况下请求的字段
 
 	records, total, _ := BankRecords{UserID: userID}.GetByUser(page, pageSize)
 
 	var bankIDs []uint64
 	for _, record := range records {
+		fmt.Printf("records %d ,total %d \n", record.BankID, total)
 		bankIDs = append(bankIDs, record.BankID)
 	}
-	mydb.Select(fieldsStr).Where("id IN (?)  AND disable=false ", bankIDs).Order("id").Offset(offset).Find(&banks)
+	mydb.Select(fieldsStr).Where("id IN (?)  AND disable=false ", bankIDs).Order("id").Find(&banks)
 	return banks, total, nil
 }
 

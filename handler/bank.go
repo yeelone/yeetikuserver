@@ -191,13 +191,13 @@ func GetBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 func GetUserBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
-
+	r.ParseForm()
 	response := Response{}.Default()
 	userID := utils.GetUserInfoFromContext(r.Context())
 	query := parseQuery(r)
 	fmt.Printf("query %+v \n ", query)
 	response.Body["banks"], response.Body["total"], err = model.Bank{}.GetByUser(query.Page, query.PageSize, userID)
-
+	fmt.Printf("response.Body.banks, %+v \n ", response.Body["banks"])
 	b, err = json.Marshal(response)
 
 	if err != nil {

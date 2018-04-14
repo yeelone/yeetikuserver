@@ -16,6 +16,17 @@ func Test_GetByUser_2(t *testing.T) {
 	}
 }
 
+func Test_LikeComment_1(t *testing.T) {
+	u := &model.User{}
+	if result, err := u.LikeComment(1, 23); err != nil { //try a unit test on function
+		t.Error(err)
+		t.Error("测试用户赞评论的功能没通过") // 如果不是如预期的那么就报错
+	} else {
+		t.Logf("%+v", result)
+		t.Log("测试用户赞评论的功能通过") //记录一些你期望记录的信息
+	}
+}
+
 //todo : 这里应该那家一个测试账号
 //func Test_ResetPassword_1(t *testing.T) {
 //	u := &model.User{}

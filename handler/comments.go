@@ -28,7 +28,7 @@ func CreateComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 		response.Message = err.Error()
 	} else {
 		response.Code = StatusOK
-		response.Body["ID"] = id
+		response.Body["id"] = id
 	}
 
 	b, err := json.Marshal(response)
@@ -36,6 +36,74 @@ func CreateComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 		fmt.Println("errors :", err)
 	}
 	w.Write(b)
+}
+
+func LikeComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	userid, _ := strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	commentid, _ := strconv.ParseUint(ps.ByName("commentid"), 10, 64)
+
+	c := model.Comments{}
+	response := Response{}.Default()
+	if count, err := c.LikeComment(userid, commentid); err != nil {
+		response.Code = StatusNotAcceptable
+		response.Message = err.Error()
+	} else {
+		response.Code = StatusOK
+		response.Body["count"] = count
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		fmt.Println("errors :", err)
+	}
+	w.Write(b)
+}
+
+func DislikeComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
+	userid, _ := strconv.ParseUint(ps.ByName("userid"), 10, 64)
+	commentid, _ := strconv.ParseUint(ps.ByName("commentid"), 10, 64)
+
+	c := model.Comments{}
+	response := Response{}.Default()
+	if count, err := c.DislikeComment(userid, commentid); err != nil {
+		response.Code = StatusNotAcceptable
+		response.Message = err.Error()
+	} else {
+		response.Code = StatusOK
+		response.Body["count"] = count
+	}
+
+	b, err := json.Marshal(response)
+	if err != nil {
+		fmt.Println("errors :", err)
+	}
+	w.Write(b)
+}
+
+func UpdateComment(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var u model.User
+	result, _ := ioutil.ReadAll(r.Body)
+	r.Body.Close()
+	json.Unmarshal([]byte(result), &u)
+
+	var err error
+	var resq []byte
+	response := Response{}.Default()
+	if u, err = u.Save(); err != nil {
+		response.Status = http.StatusForbidden
+		response.Code = StatusUnauthorized
+		response.Message = err.Error()
+	} else {
+		response.Body["user"] = u
+	}
+
+	resq, err = json.Marshal(response)
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+	w.Write(resq)
 }
 
 // GetComments : 查询评论,后台专用API
@@ -73,7 +141,7 @@ func GetQuestionComments(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 	response := Response{}.Default()
 	quesid, _ := strconv.ParseUint(ps.ByName("id"), 10, 64)
-	response.Body["comments"], response.Body["total"] = model.Comments{}.GetByQuestion(quesid, query.Page, query.PageSize)
+	response.Body["comments"], response.Body["total"] = model.Comments{}.GetByQuestion(quesid, 0, query.Page, query.PageSize)
 	b, err = json.Marshal(response)
 
 	if err != nil {
@@ -83,7 +151,7 @@ func GetQuestionComments(w http.ResponseWriter, r *http.Request, ps httprouter.P
 }
 
 // GetParentComments : 查询评论
-func GetChilrenComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func GetChildComments(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)
 	parent, _ := strconv.ParseUint(ps.ByName("id"), 10, 64)

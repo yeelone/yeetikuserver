@@ -73,8 +73,8 @@ func main() {
 	router.GET("/api/v1/users", h.GetUsers)
 	router.POST("/api/v1/users", h.SaveUser)
 	router.GET("/api/v1/users/:id", h.GetUser)
-	router.PUT("/api/v1/users", h.SaveUser)
-	router.PUT("/api/v1/users/:id", h.UpdateUser)
+	// router.PUT("/api/v1/users", h.SaveUser)
+	router.PUT("/api/v1/users/:id", h.SaveUser)
 	router.POST("/api/v1/users/:id/reset", h.ResetPasswordUser)
 	router.DELETE("/api/v1/users/:id", h.DeleteUsers)
 	router.DELETE("/api/v1/users", h.DeleteUsers)
@@ -140,6 +140,8 @@ func main() {
 	// router.GET("/api/v1/import/questions/users/:id/result", h.ImportQuestionResult)
 	router.GET("/api/v1/notification/users/:id/questions/import/", h.GetQuestionImportResult)
 	router.DELETE("/api/v1/notification/users/:id/questions/import/", h.RemoveQuestionImportResult)
+
+	router.GET("/api/v1/feedback", h.GetFeedBacks)
 	router.POST("/api/v1/feedback", h.CreateFeedBack)
 
 	router.GET("/api/v1/client/config", h.GetAppConfig)
@@ -148,7 +150,9 @@ func main() {
 	router.POST("/api/v1/client/icon/upload", h.UploadClientIconImage)
 
 	router.GET("/api/v1/comments/all", h.GetALlComments)
-	router.GET("/api/v1/comments/parent/:id", h.GetChilrenComments)
+	router.GET("/api/v1/comments/parent/:id", h.GetChildComments)
+	router.PUT("/api/v1/comments/:commentid/users/:userid/like", h.LikeComments)
+	router.PUT("/api/v1/comments/:commentid/users/:userid/dislike", h.DislikeComments)
 	router.DELETE("/api/v1/comments", h.DeleteComments)
 	router.POST("/api/v1/comments", h.CreateComments)
 	n.UseHandler(router)

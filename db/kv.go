@@ -26,7 +26,7 @@ func (s KVManager) Init() {
 	synconce.Do(func() {
 		if kdvInstance == nil {
 			var err error
-			kdvInstance, err = bolt.Open("my.db", 0600, nil)
+			kdvInstance, err = bolt.Open("yeetiku.db", 0600, nil)
 			if err != nil {
 				panic("failed to connect kv database")
 			}

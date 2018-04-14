@@ -19,10 +19,10 @@ type Config struct {
 }
 
 func (c Config) toString() string {
-	return toJson(c)
+	return toJSON(c)
 }
 
-func toJson(cfg interface{}) string {
+func toJSON(cfg interface{}) string {
 	bytes, err := json.Marshal(cfg)
 	if err != nil {
 		fmt.Println(err.Error())

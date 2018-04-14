@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 	db "yeetikuserver/db"
@@ -12,30 +13,31 @@ import (
 )
 
 type User struct {
-	ID              uint64    `json:"id" gorm:"primary_key"`
-	Avatar          string    `json:"avatar"`
-	Email           string    `json:"email" gorm:"not null;unique"`
-	Name            string    `json:"name"`
-	Nickname        string    `json:"nickname"`
-	Age             uint64    `json:"age"`
-	Sex             string    `json:"sex"`
-	Address         string    `json:"address"`
-	Phone           string    `json:"phone"`
-	Groups          []Group   `gorm:"many2many:user_groups;"`
-	Tags            []Tag     `gorm:"many2many:user_tags;"`
-	Password        string    `json:"password,omitempty" gorm:"not null"`
-	PasswordConfirm string    `json:"password_confirm,omitempty"`
-	Salt            string    `json:"salt,omitempty"`
-	IsSuper         bool      `json:"is_super_user"`
-	CreatedAt       time.Time `json:"createtime"`
+	ID              uint64  `json:"id" gorm:"primary_key"`
+	Avatar          string  `json:"avatar"`
+	Email           string  `json:"email" gorm:"not null;unique"`
+	Name            string  `json:"name"`
+	Nickname        string  `json:"nickname"`
+	Age             uint64  `json:"age"`
+	Sex             string  `json:"sex"`
+	Address         string  `json:"address"`
+	Phone           string  `json:"phone"`
+	Groups          []Group `gorm:"many2many:user_groups;"`
+	Tags            []Tag   `gorm:"many2many:user_tags;"`
+	Password        string  `json:"password,omitempty" gorm:"not null"`
+	PasswordConfirm string  `json:"password_confirm,omitempty"`
+	Salt            string  `json:"salt,omitempty"`
+	IsSuper         bool    `json:"is_super_user"`
+	CreatedAt       time.Time
 	UpdatedAt       time.Time
 }
 
 func (u User) Get() (result User, err error) {
 	if u.ID > 0 {
 		value, err := kvdb.Get(db.USERBUCKET, string(u.ID))
-		if err != nil {
+		if err == nil {
 			err = json.Unmarshal(value, &result)
+			fmt.Printf("从缓存中取得 %v \n", result)
 			return result, nil
 		}
 	}
@@ -94,10 +96,15 @@ func (u User) Save() (User, error) {
 	} else {
 		u.IsSuper = false
 	}
-
 	if u.ID > 0 {
 		tx.Model(&u).Where("id = ?", u.ID).Updates(u)
-	} else {
+		encoded, err := json.Marshal(u)
+		if err == nil {
+			kvdb.Set(db.USERBUCKET, string(u.ID), string(encoded))
+		}
+
+	} else if len(u.Email) > 0 {
+
 		u.Salt = strings.Replace(uuid.NewUUID().String(), "-", "", -1)
 		u.Password = utils.EncryptPassword(u.Password, u.Salt)
 		if err := tx.Create(&u).Error; err != nil {

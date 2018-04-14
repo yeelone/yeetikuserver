@@ -87,12 +87,13 @@ func ChangePassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 
 func SaveUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var u model.User
-	result, _ := ioutil.ReadAll(r.Body)
-	r.Body.Close()
-	json.Unmarshal([]byte(result), &u)
-
 	var err error
 	var resq []byte
+
+	result, _ := ioutil.ReadAll(r.Body)
+	r.Body.Close()
+	err = json.Unmarshal([]byte(result), &u)
+
 	response := Response{}.Default()
 	if u, err = u.Save(); err != nil {
 		response.Status = http.StatusForbidden
@@ -138,30 +139,30 @@ func DeleteUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 }
 
 //todo : 用这个函数替代 SaveUser
-func UpdateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	var u model.User
-	result, _ := ioutil.ReadAll(r.Body)
-	r.Body.Close()
-	json.Unmarshal([]byte(result), &u)
+// func UpdateUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// 	var u model.User
+// 	result, _ := ioutil.ReadAll(r.Body)
+// 	r.Body.Close()
+// 	json.Unmarshal([]byte(result), &u)
+// 	fmt.Printf("user : %v \n", r.Body)
+// 	var err error
+// 	var resq []byte
+// 	response := Response{}.Default()
+// 	if u, err = u.Save(); err != nil {
+// 		response.Status = http.StatusForbidden
+// 		response.Code = StatusUnauthorized
+// 		response.Message = err.Error()
+// 	} else {
+// 		response.Body["user"] = u
+// 	}
 
-	var err error
-	var resq []byte
-	response := Response{}.Default()
-	if u, err = u.Save(); err != nil {
-		response.Status = http.StatusForbidden
-		response.Code = StatusUnauthorized
-		response.Message = err.Error()
-	} else {
-		response.Body["user"] = u
-	}
-
-	resq, err = json.Marshal(response)
-	if err != nil {
-		fmt.Println("error:", err)
-		return
-	}
-	w.Write(resq)
-}
+// 	resq, err = json.Marshal(response)
+// 	if err != nil {
+// 		fmt.Println("error:", err)
+// 		return
+// 	}
+// 	w.Write(resq)
+// }
 
 func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()

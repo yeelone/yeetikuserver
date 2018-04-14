@@ -44,3 +44,23 @@ func CreateFeedBack(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 	w.Write(b)
 }
+
+func GetFeedBacks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	r.ParseForm()
+	var err error
+	var b []byte
+
+	response := Response{}.Default()
+
+	query := parseQuery(r)
+	feeds := model.Feedback{}
+
+	response.Body["feedbacks"], response.Body["total"] = feeds.GetAll(query.Page, query.PageSize, query.Field, query.Keyword)
+
+	b, err = json.Marshal(response)
+
+	if err != nil {
+		fmt.Println("errors :", err)
+	}
+	w.Write(b)
+}

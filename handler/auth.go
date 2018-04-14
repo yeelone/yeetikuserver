@@ -39,17 +39,21 @@ func AdminLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 			log.WithFields(log.Fields{
 				"email": u.Email,
 			}).Info("登录后台系统")
-
 		} else {
 			b, err = json.Marshal(&Response{
 				http.StatusForbidden,
 				StatusUnauthorized,
 				nil,
 				"", //token is empty
-				"cann't login ",
+				"用户名或者密码错误",
 				1,
 				1,
 			})
+
+			log.WithFields(log.Fields{
+				"email": u.Email,
+			}).Warn("正在使用错误的密码尝试登录后台系统")
+
 		}
 	} else {
 		log.WithFields(log.Fields{
