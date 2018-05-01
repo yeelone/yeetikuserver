@@ -83,7 +83,7 @@ func main() {
 	router.GET("/api/v1/users/:id/banks", h.GetUserBanks)
 	router.GET("/api/v1/users/:id/records", h.GetUserRecords)
 	router.GET("/api/v1/users/:id/favorites", h.GetUserFavorites)
-	router.GET("/api/v1/users/:id/wrong", h.GetUserWrong)
+	router.GET("/api/v1/users/:id/bank/:bankid/wrong", h.GetUserWrong)
 	router.POST("/api/v1/users/:id/records", h.InsertRecords)
 	router.GET("/api/v1/me", h.GetCurrentUser)
 

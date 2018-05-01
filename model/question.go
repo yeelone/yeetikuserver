@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -182,21 +183,28 @@ func (q Question) GetUserFavorites(userID, page, pageSize uint64) (result []Ques
 }
 
 //GetUserWrong : 获取用户错题
-func (q Question) GetUserWrong(userID, page, pageSize uint64) (result []Question, total uint64, err error) {
+func (q Question) GetUserWrong(userID, bankID, page, pageSize uint64) (result []Question, total uint64, err error) {
 	var offset = (page - 1) * pageSize
 	var questions []Question
-	err = mydb.Model(&QuestionRecord{}).Select("question_id as id").Offset(offset).Limit(pageSize).Where("user_id = ? AND result=false", userID).Order("id").Scan(&questions).Error
+	if bankID == 0 {
+		err = mydb.Model(&QuestionRecord{}).Select("question_id as id").Offset(offset).Limit(pageSize).Where("user_id = ? AND result= ?", userID, bankID, false).Order("id").Scan(&questions).Error
+		mydb.Model(&QuestionRecord{}).Where("user_id = ? AND result=false ", userID).Count(&total)
+	} else {
+		err = mydb.Model(&QuestionRecord{}).Select("question_id as id").Offset(offset).Limit(pageSize).Where("user_id = ? AND bank_id = ? AND result= ?", userID, bankID, false).Order("id").Scan(&questions).Error
+		mydb.Model(&QuestionRecord{}).Where("user_id = ? AND bank_id = ? AND result=false ", userID, bankID).Count(&total)
+	}
+
 	var ids []uint64
 	for _, question := range questions {
 		ids = append(ids, question.ID)
 	}
+
+	fmt.Printf("%v \n", ids)
 	mydb.Model(&q).Where("id IN (?)", ids).Order("id").Scan(&questions)
-	mydb.Model(&QuestionRecord{}).Where("user_id = ? AND result=false ", userID).Count(&total)
 
 	for index, q := range questions {
 		questions[index].Options = q.GetOptions()
 	}
-
 	return questions, total, err
 }
 

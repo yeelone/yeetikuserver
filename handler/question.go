@@ -97,17 +97,17 @@ func GetUserFavorites(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	}
 	w.Write(b)
 }
-
 func GetUserWrong(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
 	var b []byte
 	userID, _ := strconv.ParseUint(ps.ByName("id"), 10, 64)
+	bankID, _ := strconv.ParseUint(ps.ByName("bankid"), 10, 64)
 	response := Response{}.Default()
 	query := parseQuery(r)
 	question := model.Question{Category: query.CategoryID}
 
-	response.Body["questions"], response.Body["total"], err = question.GetUserWrong(userID, query.Page, query.PageSize)
+	response.Body["questions"], response.Body["total"], err = question.GetUserWrong(userID, bankID, query.Page, query.PageSize)
 
 	if err != nil {
 		response.Code = StatusNotAcceptable
