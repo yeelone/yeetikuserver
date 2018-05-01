@@ -72,7 +72,7 @@ func (q QuestionRecord) CountByBankID(bankID uint64, userID uint64) (total, wron
 	return total, wrong
 }
 
-//获取用户的做题记录，包括做的题数量，错题数量， 题所属题库有哪些等等
+//GetByUser : 获取用户的做题记录，包括做的题数量，错题数量， 题所属题库有哪些等等
 //todo: 获取的数据项比较多，看看是不是加缓存改善一下
 func (q QuestionRecord) GetByUser(userID uint64) (result interface{}, err error) {
 

@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 	"time"
 )
@@ -31,6 +30,7 @@ type Bank struct {
 	UpdatedAt   time.Time
 }
 
+//Update : 更新题库
 func (t *Bank) Update() (err error) {
 	tx := mydb.Begin()
 	err = tx.Model(Bank{}).Where("id = ?", t.ID).Updates(t).Error
@@ -42,10 +42,12 @@ func (t *Bank) Update() (err error) {
 	return nil
 }
 
+// GetRecords : 
 func (t Bank) GetRecords() (bank Bank) {
 	return t
 }
 
+// Save :
 func (t *Bank) Save(keys []uint64) (err error) {
 	tx := mydb.Begin()
 	// update or create
@@ -93,6 +95,7 @@ func (t *Bank) Save(keys []uint64) (err error) {
 	return nil
 }
 
+//SaveQuestions :为题库添加题目
 func (t Bank) SaveQuestions(questions []uint64) (err error) {
 	tx := mydb.Begin()
 	var qs []Question
@@ -115,6 +118,8 @@ func (t Bank) SaveQuestions(questions []uint64) (err error) {
 	return nil
 }
 
+// DeleteQuestions : 删除题库里的题目
+// @param : questions 接受题目ID数组
 func (t Bank) DeleteQuestions(questions []uint64) (err error) {
 	tx := mydb.Begin()
 
@@ -138,6 +143,7 @@ func (t Bank) DeleteQuestions(questions []uint64) (err error) {
 	return nil
 }
 
+//Get : 获取单个题库
 func (t Bank) Get() (item Bank) {
 	mydb.Select("id,creator,name,limited,description,disable,image,allow_type,created_at,updated_at").First(&item, t.ID)
 	switch item.AllowType {
@@ -153,7 +159,7 @@ func (t Bank) Get() (item Bank) {
 	return item
 }
 
-//GetRelatedQuestions :
+//GetRelatedQuestions : 获取相关联的题目
 //@params page
 //@params pageSize
 func (t Bank) GetRelatedQuestions(start, page, pageSize uint64) (qs []Question, total int) {
@@ -220,13 +226,13 @@ func (t Bank) GetByUser(page, pageSize, userID uint64) (banks []Bank, total int,
 
 	var bankIDs []uint64
 	for _, record := range records {
-		fmt.Printf("records %d ,total %d \n", record.BankID, total)
 		bankIDs = append(bankIDs, record.BankID)
 	}
 	mydb.Select(fieldsStr).Where("id IN (?)  AND disable=false ", bankIDs).Order("id").Find(&banks)
 	return banks, total, nil
 }
 
+//GetTags :
 func (t Bank) GetTags(bankID uint64) (tags []Btags, total int, err error) {
 	t.ID = bankID
 	mydb.Model(&t).Association("Btags").Find(&tags)

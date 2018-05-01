@@ -2,10 +2,7 @@ package gotest
 
 import (
 	"testing"
-
 	"yeetikuserver/model"
-
-	"yeetikuserver/handler"
 )
 
 func Test_GetUserFavorites_3(t *testing.T) {
@@ -30,9 +27,11 @@ func Test_GetUserWrong_1(t *testing.T) {
 	}
 }
 
-func Test_SaveExcelToDB_1(t *testing.T) {
-	file := "../upload/file/questions/test.xlsx"
 
-	handler.SaveExcelToDB(13, file)
 
-}
+// func Test_SaveExcelToDB_1(t *testing.T) {
+// 	file := "../upload/file/questions/test.xlsx"
+
+// 	handler.SaveExcelToDB(13, file)
+
+// }

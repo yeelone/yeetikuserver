@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 	db "yeetikuserver/db"
@@ -37,7 +36,6 @@ func (u User) Get() (result User, err error) {
 		value, err := kvdb.Get(db.USERBUCKET, string(u.ID))
 		if err == nil {
 			err = json.Unmarshal(value, &result)
-			fmt.Printf("从缓存中取得 %v \n", result)
 			return result, nil
 		}
 	}
