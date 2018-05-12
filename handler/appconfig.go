@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+// Config : app config struct
 type Config struct {
 	Name        string `json:"name"`
 	Domain      string `json:"domain"`
@@ -32,6 +33,7 @@ func toJSON(cfg interface{}) string {
 	return string(bytes)
 }
 
+//GetAppConfig : get app client config handler
 func GetAppConfig(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var cfg Config
 	response := Response{}.Default()

@@ -11,6 +11,7 @@ import (
 	"github.com/pborman/uuid"
 )
 
+//User :
 type User struct {
 	ID              uint64  `json:"id" gorm:"primary_key"`
 	Avatar          string  `json:"avatar"`
@@ -31,6 +32,7 @@ type User struct {
 	UpdatedAt       time.Time
 }
 
+//Get :
 func (u User) Get() (result User, err error) {
 	if u.ID > 0 {
 		value, err := kvdb.Get(db.USERBUCKET, string(u.ID))
@@ -185,6 +187,7 @@ func (u User) ResetPassword(email, password string) (err error) {
 	return mydb.Model(&u).Update("password", u.Password).Error
 }
 
+//MarshalJSON :
 func (u *User) MarshalJSON() ([]byte, error) {
 	type Alias User
 	return json.Marshal(&struct {

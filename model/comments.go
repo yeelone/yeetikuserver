@@ -9,6 +9,7 @@ import (
 	"yeetikuserver/utils"
 )
 
+//Comments :
 type Comments struct {
 	ID        uint64    `json:"id" gorm:"primary_key"`
 	Creator   uint64    `json:"creator" gorm:"not null;"`

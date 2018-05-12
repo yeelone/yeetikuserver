@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// BankRecords :
 type BankRecords struct {
 	ID          uint64    `json:"id" gorm:"primary_key"`
 	BankID      uint64    `json:"bank_id"`
@@ -15,11 +16,13 @@ type BankRecords struct {
 	UpdatedAt   time.Time `json:"update_time"`
 }
 
+// Get :
 func (r BankRecords) Get() (record BankRecords) {
 	mydb.Where(&BankRecords{BankID: r.BankID, UserID: r.UserID}).First(&record)
 	return record
 }
 
+// GetAll :
 func (r BankRecords) GetAll(page, pageSize uint64) (records []BankRecords, total uint64) {
 	var offset = (page - 1) * pageSize
 	mydb.Model(&r).Offset(offset).Limit(pageSize).Where(&BankRecords{BankID: r.BankID}).First(&records)
@@ -33,6 +36,7 @@ func (r BankRecords) GetAll(page, pageSize uint64) (records []BankRecords, total
 	return records, total
 }
 
+// GetByUser :
 func (r BankRecords) GetByUser(page, pageSize uint64) (records []BankRecords, total int, err error) {
 	var offset = (page - 1) * pageSize
 	mydb.Model(&r).Offset(offset).Limit(pageSize).Order("id").Where(&BankRecords{UserID: r.UserID}).Find(&records)
@@ -40,6 +44,7 @@ func (r BankRecords) GetByUser(page, pageSize uint64) (records []BankRecords, to
 	return records, total, nil
 }
 
+// Insert :
 func (r BankRecords) Insert() (err error) {
 	record := BankRecords{}
 	tx := mydb.Begin()
@@ -58,6 +63,7 @@ func (r BankRecords) Insert() (err error) {
 	return nil
 }
 
+// MarshalJSON :
 func (r *BankRecords) MarshalJSON() ([]byte, error) {
 	type Alias BankRecords
 	return json.Marshal(&struct {

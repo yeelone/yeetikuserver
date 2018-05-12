@@ -8,6 +8,7 @@ import (
 	"yeetikuserver/utils"
 )
 
+// Category :
 type Category struct {
 	ID      uint64 `gorm:"primary_key"`
 	Creator uint64 `json:"creator" gorm:"not null;"`
@@ -15,6 +16,7 @@ type Category struct {
 	Parent  uint64 `json:"parent"` //默认为0
 }
 
+// Save :
 func (c *Category) Save() (uint64, error) {
 	if len(c.Name) == 0 {
 		return 0, errors.New("name is empty")
@@ -39,6 +41,7 @@ func (c *Category) Save() (uint64, error) {
 	return c.ID, nil
 }
 
+// GetAll :
 func (c Category) GetAll() (cats []Category) {
 	mydb.Select("ID,name,parent").Find(&cats)
 	return cats
@@ -58,6 +61,7 @@ func (c Category) Delete() error {
 	return nil
 }
 
+//Update :
 func (c Category) Update() error {
 	tx := mydb.Begin()
 	if err := tx.Model(&c).Update("name", c.Name).Error; err != nil {
@@ -69,7 +73,7 @@ func (c Category) Update() error {
 
 }
 
-/* QueryByName ：
+/*QueryByName ...
    @params : name
 	name 的格式： 父目录.子目录.节点
 
@@ -116,6 +120,7 @@ func (c Category) GetChild() []uint64 {
 	return ids
 }
 
+// MarshalJSON :
 func (c *Category) MarshalJSON() ([]byte, error) {
 
 	return json.Marshal(&struct {
@@ -129,6 +134,7 @@ func (c *Category) MarshalJSON() ([]byte, error) {
 	})
 }
 
+//CategoryTree :
 type CategoryTree struct {
 	ID     uint64
 	Parent uint64

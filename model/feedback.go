@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+//Feedback :
 type Feedback struct {
 	ID        uint64 `json:"id" gorm:"primary_key"`
 	User      User   `json:"user"`    //用户
@@ -15,6 +16,7 @@ type Feedback struct {
 	CreatedAt time.Time
 }
 
+//Save :
 func (f Feedback) Save() (err error) {
 	tx := mydb.Begin()
 	err = tx.Create(&f).Error
@@ -28,6 +30,7 @@ func (f Feedback) Save() (err error) {
 	return nil
 }
 
+//GetAll :
 func (f Feedback) GetAll(page, pageSize uint64, where string, whereKeyword string) (feeds []Feedback, total uint64) {
 	m := mydb.Select("id,content,image,close,contact,created_at")
 	if len(where) > 0 {

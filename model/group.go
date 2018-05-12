@@ -1,11 +1,13 @@
 package model
 
+//Group :
 type Group struct {
 	ID    uint64 `json:"id" gorm:"primary_key"`
 	Name  string `json:"name" gorm:"not null;unique"`
 	Users []User `json:"users" gorm:"many2many:user_groups;"`
 }
 
+//GetAll :
 func (g Group) GetAll(page, pageSize uint64, where string, whereKeyword string) (gs []Group, total uint64) {
 	var offset = (page - 1) * pageSize
 	fieldsStr := "ID,name"
@@ -20,6 +22,7 @@ func (g Group) GetAll(page, pageSize uint64, where string, whereKeyword string) 
 	return gs, total
 }
 
+//GetRelatedUsers :
 func (g Group) GetRelatedUsers() (users []User, err error) {
 	if err := mydb.Model(&g).Association("Users").Find(&users).Error; err != nil {
 		return users, err
@@ -27,6 +30,7 @@ func (g Group) GetRelatedUsers() (users []User, err error) {
 	return users, nil
 }
 
+//Save :
 func (g Group) Save(users []uint64) (group Group, err error) {
 	tx := mydb.Begin()
 	// update or create
@@ -46,6 +50,7 @@ func (g Group) Save(users []uint64) (group Group, err error) {
 	return g, nil
 }
 
+//AddUsers :
 func (g Group) AddUsers(idList []uint64) (err error) {
 	tx := mydb.Begin()
 	var users []User
@@ -62,6 +67,7 @@ func (g Group) AddUsers(idList []uint64) (err error) {
 	return nil
 }
 
+//Get :
 func (g Group) Get(withUsers bool) (result Group) {
 	if g.ID == 0 {
 		return Group{}
@@ -74,6 +80,7 @@ func (g Group) Get(withUsers bool) (result Group) {
 	return result
 }
 
+//Remove :
 func (g Group) Remove(ids []uint64) (err error) {
 	tx := mydb.Begin()
 	if err = tx.Exec("DELETE FROM groups  WHERE id IN (?) ", ids).Error; err != nil {
@@ -90,6 +97,7 @@ func (g Group) Remove(ids []uint64) (err error) {
 	return nil
 }
 
+//InitDefault :
 func (g Group) InitDefault() error {
 	tx := mydb.Begin()
 	// Create

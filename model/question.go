@@ -2,14 +2,16 @@ package model
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 
 	"yeetikuserver/utils"
 )
 
+//QLevel :
 var QLevel = map[string]int64{"easy": 1, "normal": 2, "hard": 3}
+
+//QType :
 var QType = map[string]string{"单选题": "single", "多选题": "multiple", "判断题": "truefalse", "填空题": "filling", "问答题": "essay"}
 
 //QuestionAnswerOptions : 建立一个中间表，记录题与选项之间的关系
@@ -45,12 +47,14 @@ func (qao QuestionAnswerOptions) DeleteByQuestionID() error {
 	return nil
 }
 
+//AnswerOption :
 type AnswerOption struct {
 	ID        uint64 `json:"id" gorm:"primary_key"`
 	Content   string `json:"content" gorm:"not null;unique"`
 	IsCorrect bool   `json:"is_correct" gorm:"-"`
 }
 
+//Add :
 func (op AnswerOption) Add() (uint64, error) {
 	if err := mydb.Where("content = ?", op.Content).First(&op).Error; err == nil {
 		return op.ID, nil
@@ -65,6 +69,7 @@ func (op AnswerOption) Add() (uint64, error) {
 	return op.ID, nil
 }
 
+// Question :
 type Question struct {
 	ID             uint64         `json:"id" gorm:"primary_key"`
 	Creator        uint64         `json:"creator" gorm:"not null;"`
@@ -73,6 +78,7 @@ type Question struct {
 	Subject        string         `json:"subject"`
 	Score          float64        `json:"score"`
 	Level          uint64         `json:"level"`
+	Explanation    string         `json:"explanation"`
 	Options        []AnswerOption `json:"options" gorm:"-"`
 	CorrectOptions []uint64       `json:"correct_options" gorm:"-"`
 	CorrectAnswers string         `json:"correct_answers"` //记录正确答案，用于填空题和是非题，是非题值为true/false,填空题为以逗号分隔的字符串
@@ -83,7 +89,7 @@ type Question struct {
 
 // Get :
 func (q Question) Get() (qs Question) {
-	mydb.Select("id,creator,type,category,subject,score,level,correct_answers,true_false").First(&qs, q.ID)
+	mydb.Select("id,creator,type,category,subject,score,level,explanation,correct_answers,true_false").First(&qs, q.ID)
 	qs.Options = qs.GetOptions()
 	return qs
 }
@@ -115,7 +121,7 @@ func (q Question) GetOptions() []AnswerOption {
 
 // GetAll :
 func (Question) GetAll(where string, whereKeyword string) (qs []Question) {
-	m := mydb.Select("id,creator,type,category,subject,score,level,correct_answers,true_false")
+	m := mydb.Select("id,creator,type,category,subject,score,level,explanation,correct_answers,true_false")
 	if len(where) > 0 {
 		if strings.EqualFold(where, "subject") {
 			m = m.Where(where+" LIKE  ?", "%"+whereKeyword+"%")
@@ -135,7 +141,7 @@ func (q Question) GetByCategory(page, pageSize uint64, where string, whereKeywor
 	if q.Category == 0 {
 		qs = q.GetAll(where, whereKeyword)
 	} else {
-		m := mydb.Select("id,type,category,level,subject,score").Where("category IN (?)", cat.GetChild())
+		m := mydb.Select("id,type,category,level,explanation,subject,score").Where("category IN (?)", cat.GetChild())
 		if len(where) > 0 {
 			if strings.EqualFold(where, "subject") {
 				m = m.Where(where+" LIKE  ?", "%"+whereKeyword+"%")
@@ -150,7 +156,7 @@ func (q Question) GetByCategory(page, pageSize uint64, where string, whereKeywor
 	return qs
 }
 
-//UpdateCategory
+//UpdateCategory :
 func (q Question) UpdateCategory(qusID, catID uint64) (err error) {
 	q.ID = qusID
 	tx := mydb.Begin()
@@ -162,8 +168,8 @@ func (q Question) UpdateCategory(qusID, catID uint64) (err error) {
 	return err
 }
 
-//todo: 修复这里的bug
 //GetUserFavorites : 获取用户收藏的题
+//todo: 修复这里的bug
 func (q Question) GetUserFavorites(userID, page, pageSize uint64) (result []Question, total uint64, err error) {
 	var offset = (page - 1) * pageSize
 	var questions []Question
@@ -199,7 +205,6 @@ func (q Question) GetUserWrong(userID, bankID, page, pageSize uint64) (result []
 		ids = append(ids, question.ID)
 	}
 
-	fmt.Printf("%v \n", ids)
 	mydb.Model(&q).Where("id IN (?)", ids).Order("id").Scan(&questions)
 
 	for index, q := range questions {

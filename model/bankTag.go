@@ -19,6 +19,7 @@ type Btags struct {
 	Banks  []Bank `json:"banks" gorm:"many2many:banks_btags;"`
 }
 
+//Save :
 func (t Btags) Save() (tag Btags, err error) {
 
 	if len(t.Name) == 0 {
@@ -59,6 +60,7 @@ func (t Btags) Save() (tag Btags, err error) {
 	return t, nil
 }
 
+//GetRelatedBanks :
 func (t Btags) GetRelatedBanks(page, pageSize uint64) (banks []Bank, total int) {
 	var offset = (page - 1) * pageSize
 
@@ -82,7 +84,7 @@ func (t Btags) GetRelatedBanks(page, pageSize uint64) (banks []Bank, total int) 
 	return banks, total
 }
 
-//relateBank : 关联题库跟标签
+//RelateBank : 关联题库跟标签
 func (t Btags) RelateBank(bankID uint64) (err error) {
 	tx := mydb.Begin()
 	bank := Bank{ID: bankID}
@@ -137,6 +139,7 @@ func (t Btags) Delete(tagID uint64) (err error) {
 	return nil
 }
 
+// GetTagTree :
 func (t Btags) GetTagTree(query string) (tree interface{}, total int, err error) {
 	m := mydb.Select("id,name,parent,level")
 	tags := []Btags{}
@@ -197,6 +200,7 @@ func formatTagsToTree(tags []Btags) (tagsTree interface{}) {
 	return m
 }
 
+// GetChild :
 func (t Btags) GetChild(id uint64) []uint64 {
 	level := TagsTree{}.generateTree(utils.Uint2Str(id))
 	var ids []uint64
@@ -205,6 +209,8 @@ func (t Btags) GetChild(id uint64) []uint64 {
 	}
 	return ids
 }
+
+//MarshalJSON :
 func (t *Btags) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&struct {
 		ID     uint64 `json:"id" gorm:"primary_key"`
@@ -219,6 +225,7 @@ func (t *Btags) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// TagsTree :
 type TagsTree struct {
 	ID     uint64
 	Parent uint64

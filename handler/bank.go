@@ -33,6 +33,7 @@ func parseQueryData(r *http.Request) parseModel {
 	return m
 }
 
+// GetBank :
 func GetBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -49,6 +50,7 @@ func GetBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//GetRelatedQuestions :
 func GetRelatedQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -65,6 +67,7 @@ func GetRelatedQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	w.Write(b)
 }
 
+// CreateBank :
 func CreateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userID := utils.GetUserInfoFromContext(r.Context())
 
@@ -99,6 +102,7 @@ func CreateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//GetRecords :
 func GetRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)
@@ -118,7 +122,7 @@ func GetRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
-//查询用户在题库下练习的所有记录，包括练习数量 ，做错题的数量 ，收藏
+//QueryUserRecords : 查询用户在题库下练习的所有记录，包括练习数量 ，做错题的数量 ，收藏
 func QueryUserRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -136,6 +140,7 @@ func QueryUserRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Para
 	w.Write(b)
 }
 
+//UpdateBank :
 func UpdateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	userid := utils.GetUserInfoFromContext(r.Context())
 	query := parseQueryData(r)
@@ -163,6 +168,7 @@ func UpdateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+// GetBanks  : get bank list
 func GetBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -195,7 +201,7 @@ func GetUserBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	response := Response{}.Default()
 	userID := utils.GetUserInfoFromContext(r.Context())
 	query := parseQuery(r)
-	fmt.Printf("query %+v \n ", query)
+	fmt.Printf("GetUserBanks query %+v \n ", query)
 	response.Body["banks"], response.Body["total"], err = model.Bank{}.GetByUser(query.Page, query.PageSize, userID)
 	fmt.Printf("response.Body.banks, %+v \n ", response.Body["banks"])
 	b, err = json.Marshal(response)

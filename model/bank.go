@@ -6,11 +6,13 @@ import (
 	"time"
 )
 
+// Allow :
 type Allow struct {
 	Type string   `json:"type"`
 	Keys []uint64 `json:"keys"`
 }
 
+// Bank :
 type Bank struct {
 	ID          uint64     `json:"id" gorm:"primary_key"`
 	Creator     uint64     `json:"creator" gorm:"not null;"`
@@ -42,7 +44,7 @@ func (t *Bank) Update() (err error) {
 	return nil
 }
 
-// GetRecords : 
+// GetRecords :
 func (t Bank) GetRecords() (bank Bank) {
 	return t
 }

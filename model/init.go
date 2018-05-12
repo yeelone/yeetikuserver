@@ -68,6 +68,7 @@ func initGuest() {
 	}
 }
 
+// Tree :
 type Tree struct {
 	ID     uint64
 	Parent uint64
@@ -81,6 +82,7 @@ func (t Tree) generateTree(tablename, parent string) (tree []Tree) {
 	return tree
 }
 
+// GetChilrenID :
 func (t Tree) GetChilrenID(tablename string, parent uint64) []uint64 {
 	level := t.generateTree(tablename, utils.Uint2Str(parent))
 	var ids []uint64

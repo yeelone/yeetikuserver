@@ -14,6 +14,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// AdminLogin : admin login handler
 func AdminLogin(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var u model.User
 	result, _ := ioutil.ReadAll(r.Body)

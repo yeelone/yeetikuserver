@@ -1,6 +1,6 @@
-//message保存着键值对，使用的是boltdb进行存储，主要作用是保存那些不是非常重要的，却不需要永久保存的信息。
 package model
 
+//message保存着键值对，使用的是boltdb进行存储，主要作用是保存那些不是非常重要的，却不需要永久保存的信息。
 import (
 	"encoding/json"
 	"time"
@@ -9,6 +9,7 @@ import (
 	"yeetikuserver/utils"
 )
 
+//QuestionImportMessage :
 type QuestionImportMessage struct {
 	UserID    uint64 `json:"userID"`
 	UserName  string `json:"username"`
@@ -18,6 +19,7 @@ type QuestionImportMessage struct {
 	CreatedAt time.Time
 }
 
+//Save :
 func (qm QuestionImportMessage) Save() error {
 	qm.CreatedAt = time.Now()
 	encoded, err := json.Marshal(qm)
@@ -30,6 +32,7 @@ func (qm QuestionImportMessage) Save() error {
 	return nil
 }
 
+//Query ：
 func (qm QuestionImportMessage) Query() (msg QuestionImportMessage, err error) {
 	id := utils.Uint2Str(qm.UserID)
 	value, err := kvdb.Get(db.SESSIONBUCKET, id)
@@ -37,6 +40,7 @@ func (qm QuestionImportMessage) Query() (msg QuestionImportMessage, err error) {
 	return msg, err
 }
 
+//Remove :
 func (qm QuestionImportMessage) Remove() (err error) {
 	id := utils.Uint2Str(qm.UserID)
 	err = kvdb.Delete(db.SESSIONBUCKET, id)

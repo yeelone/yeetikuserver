@@ -50,7 +50,7 @@ func (q QuestionRecord) Save(bankID uint64, userID uint64, questions []RecordIte
 	return nil
 }
 
-// UpdateQuestion:  更新指定题目ID的记录
+//UpdateQuestion :  更新指定题目ID的记录
 func (q QuestionRecord) UpdateQuestion(userID uint64, questions []RecordItem) (err error) {
 	for _, question := range questions {
 		if err = mydb.Model(&q).Where("user_id = ? AND question_id = ? ", userID, question.ID).Update("result", question.Result).Error; err != nil {
@@ -61,7 +61,7 @@ func (q QuestionRecord) UpdateQuestion(userID uint64, questions []RecordItem) (e
 	return nil
 }
 
-//统计用户在指定的题库下练习的记录，返回全部记录数目，以及做错的记录
+//CountByBankID : 统计用户在指定的题库下练习的记录，返回全部记录数目，以及做错的记录
 func (q QuestionRecord) CountByBankID(bankID uint64, userID uint64) (total, wrong uint64) {
 	if err := mydb.Where("user_id = ? AND bank_id = ?", userID, bankID).Find(&q).Count(&total).Error; err != nil {
 		total = 0
@@ -147,6 +147,7 @@ func (q QuestionRecord) GetByUser(userID uint64) (result interface{}, err error)
 
 }
 
+//RemoveBank :
 func (q QuestionRecord) RemoveBank() (err error) {
 	if err = mydb.Where(" bank_id = ? ", q.BankID).Delete(&QuestionRecord{}).Error; err != nil {
 		return err

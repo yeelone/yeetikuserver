@@ -28,6 +28,7 @@ type _resData struct {
 	Category       uint64    `json:"category"`
 	Score          float64   `json:"score"`
 	Subject        string    `json:"subject"`
+	Explanation    string    `json:"explanation"`
 	Level          uint64    `json:"level"`
 	Type           string    `json:"type"`
 	FillingAnswers []string  `json:"filling-answers"` //记录填空题的答案
@@ -130,15 +131,16 @@ func SaveQuestion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	var resData _resData
 	json.Unmarshal([]byte(result), &resData)
 	m := model.Question{
-		ID:       resData.ID,
-		Creator:  utils.GetUserInfoFromContext(r.Context()),
-		Score:    resData.Score,
-		Level:    resData.Level,
-		Subject:  resData.Subject,
-		Type:     resData.Type,
-		Category: resData.Category,
+		ID:          resData.ID,
+		Creator:     utils.GetUserInfoFromContext(r.Context()),
+		Score:       resData.Score,
+		Level:       resData.Level,
+		Subject:     resData.Subject,
+		Explanation: resData.Explanation,
+		Type:        resData.Type,
+		Category:    resData.Category,
 	}
-
+	fmt.Printf("%v \n", m)
 	switch resData.Type {
 	case "truefalse":
 		m.SetTrueFalse(resData.TrueFalse)
