@@ -30,10 +30,11 @@ func InitDatabaseTable() {
 	var feedback Feedback
 	var bankTag Btags
 	var comments Comments
+	var exam Exam
 	mydb.AutoMigrate(&user, &group, &bank, &bankTag, &tag,
 		&category, &question, &answerOption, &options,
 		&records, &questionRecords, &favoritesQuestions,
-		&feedback, &comments)
+		&feedback, &comments, &exam)
 	initAdmin()
 	initGuest()
 }

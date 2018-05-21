@@ -13,8 +13,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+//DefaultPageSize :
 const DefaultPageSize uint64 = 10
 
+//ChangeAvatar :
 func ChangeAvatar(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -48,6 +50,7 @@ func ChangeAvatar(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	w.Write(b)
 }
 
+//ChangePassword :
 func ChangePassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -85,6 +88,7 @@ func ChangePassword(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(b)
 }
 
+//SaveUser :
 func SaveUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var u model.User
 	var err error
@@ -111,6 +115,7 @@ func SaveUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(resq)
 }
 
+//DeleteUsers :
 func DeleteUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		IDS []uint64 `json:"ids"`
@@ -163,7 +168,7 @@ func DeleteUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 // 	}
 // 	w.Write(resq)
 // }
-
+//GetUser
 func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -187,6 +192,7 @@ func GetUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 }
 
+//GetUserRecords :
 func GetUserRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -204,6 +210,7 @@ func GetUserRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(b)
 }
 
+//GetCurrentUser :
 func GetCurrentUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -221,6 +228,8 @@ func GetCurrentUser(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	}
 	w.Write(b)
 }
+
+//GetUsers :
 func GetUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -245,6 +254,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//GetTags :
 func GetTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)
@@ -261,6 +271,7 @@ func GetTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//SaveTag :
 func SaveTag(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		ID    uint64   `json:"id"`
@@ -291,6 +302,7 @@ func SaveTag(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//DeleteTags :
 func DeleteTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		IDS []uint64 `json:"ids"`
@@ -317,6 +329,8 @@ func DeleteTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	}
 	w.Write(b)
 }
+
+//GetTag :
 func GetTag(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error

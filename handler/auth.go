@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -87,7 +86,6 @@ func Login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		response.Token = utils.SetJWTToken(u.ID)
 		b, err = json.Marshal(response)
 
-		fmt.Printf("json b %s \n ", b)
 		//保存session
 		err := db.KVManager{}.Set(db.SESSIONBUCKET, utils.Uint2Str(u.ID), response.Token)
 		if err != nil {

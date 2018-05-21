@@ -1,10 +1,12 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
 	"time"
 
+	"yeetikuserver/db"
 	"yeetikuserver/utils"
 )
 
@@ -88,10 +90,27 @@ type Question struct {
 }
 
 // Get :
-func (q Question) Get() (qs Question) {
-	mydb.Select("id,creator,type,category,subject,score,level,explanation,correct_answers,true_false").First(&qs, q.ID)
+func (q Question) Get() (qs Question, err error) {
+	if q.ID > 0 {
+		value, _ := kvdb.Get(db.QUESTIONBUCKET, utils.Uint2Str(q.ID))
+		if len(value) > 0 {
+			err = json.Unmarshal(value, &qs)
+			return qs, nil
+		}
+	}
+	if err = mydb.Select("id,creator,type,category,subject,score,level,explanation,correct_answers,true_false").First(&qs, q.ID).Error; err != nil {
+		return qs, errors.New("cannot find any questions")
+	}
+
 	qs.Options = qs.GetOptions()
-	return qs
+	encoded, err := json.Marshal(qs)
+	kvdb.Set(db.QUESTIONBUCKET, utils.Uint2Str(qs.ID), string(encoded))
+	if err != nil {
+		return qs, err
+	}
+
+	return qs, nil
+
 }
 
 // GetOptions :

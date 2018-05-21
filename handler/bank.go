@@ -194,6 +194,7 @@ func GetBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//GetUserBanks :
 func GetUserBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -201,9 +202,7 @@ func GetUserBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	response := Response{}.Default()
 	userID := utils.GetUserInfoFromContext(r.Context())
 	query := parseQuery(r)
-	fmt.Printf("GetUserBanks query %+v \n ", query)
 	response.Body["banks"], response.Body["total"], err = model.Bank{}.GetByUser(query.Page, query.PageSize, userID)
-	fmt.Printf("response.Body.banks, %+v \n ", response.Body["banks"])
 	b, err = json.Marshal(response)
 
 	if err != nil {
@@ -213,6 +212,7 @@ func GetUserBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	w.Write(b)
 }
 
+//RemoveBank :
 func RemoveBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		ID uint64 `json:"id"`
@@ -251,6 +251,7 @@ func RemoveBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//AddRelateQuestions :
 func AddRelateQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	type parseModel struct {
@@ -279,6 +280,7 @@ func AddRelateQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	w.Write(b)
 }
 
+//RemoveRelatedQuestions :
 func RemoveRelatedQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	type parseModel struct {
@@ -307,6 +309,7 @@ func RemoveRelatedQuestions(w http.ResponseWriter, r *http.Request, ps httproute
 	w.Write(b)
 }
 
+//ChangeStatus :
 func ChangeStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		ID     uint64 `json:"id"`
@@ -340,11 +343,12 @@ func ChangeStatus(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 
 	b, err := json.Marshal(response)
 	if err != nil {
-		fmt.Printf("errors :", err)
+		fmt.Println("errors :", err)
 	}
 	w.Write(b)
 }
 
+//UploadBankImage :
 func UploadBankImage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -361,7 +365,7 @@ func UploadBankImage(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	w.Write(b)
 }
 
-//由于 EnableBank 和 DisableBank大部分代码相关，所以封装在这里
+//changeStatus : 由于 EnableBank 和 DisableBank大部分代码相关，所以封装在这里
 func changeStatus(w http.ResponseWriter, r *http.Request, isDisable bool) {
 	type parseModel struct {
 		ID uint64 `json:"id"`
@@ -401,15 +405,17 @@ func changeStatus(w http.ResponseWriter, r *http.Request, isDisable bool) {
 	}
 	b, err := json.Marshal(response)
 	if err != nil {
-		fmt.Printf("errors :", err)
+		fmt.Println("errors :", err)
 	}
 	w.Write(b)
 }
 
+//EnableBank :
 func EnableBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	changeStatus(w, r, false)
 }
 
+//DisableIank :
 func DisableIank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	changeStatus(w, r, true)
 }
@@ -442,6 +448,7 @@ func SaveRelatedBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	w.Write(b)
 }
 
+//GetBankTags :
 func GetBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	response := Response{}.Default()
@@ -470,6 +477,7 @@ func GetBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 }
 
+//RemoveRelatedTags :
 func RemoveRelatedTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -500,6 +508,7 @@ func RemoveRelatedTags(w http.ResponseWriter, r *http.Request, ps httprouter.Par
 	w.Write(b)
 }
 
+//DeleteBankTags :
 func DeleteBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte
@@ -529,6 +538,7 @@ func DeleteBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(b)
 }
 
+//GetAllBankTags :
 func GetAllBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -552,6 +562,7 @@ func GetAllBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params
 	w.Write(b)
 }
 
+//SaveBankTags :
 func SaveBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	type parseModel struct {
 		Name   string `json:"name"`
@@ -581,6 +592,7 @@ func SaveBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	w.Write(b)
 }
 
+//GetRelatedBanks :
 func GetRelatedBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)

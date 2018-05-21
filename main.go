@@ -81,6 +81,7 @@ func main() {
 	router.PUT("/api/v1/users/:id/avatar", h.ChangeAvatar)
 	router.PUT("/api/v1/users/:id/password", h.ChangePassword)
 	router.GET("/api/v1/users/:id/banks", h.GetUserBanks)
+	router.GET("/api/v1/users/:id/exams", h.GetUserExams)
 	router.GET("/api/v1/users/:id/records", h.GetUserRecords)
 	router.GET("/api/v1/users/:id/favorites", h.GetUserFavorites)
 	router.GET("/api/v1/users/:id/bank/:bankid/wrong", h.GetUserWrong)
@@ -155,6 +156,12 @@ func main() {
 	router.PUT("/api/v1/comments/:commentid/users/:userid/dislike", h.DislikeComments)
 	router.DELETE("/api/v1/comments", h.DeleteComments)
 	router.POST("/api/v1/comments", h.CreateComments)
+
+	router.GET("/api/v1/exams", h.GetUserExams)
+	router.GET("/api/v1/exams/:id", h.GetExam)
+	router.POST("/api/v1/exams", h.CreateExam)
+	router.PUT("/api/v1/exams/:id/score", h.UpdateExamScore)
+
 	n.UseHandler(router)
 	//defer  db.GetInstance().Close()
 	if runServer {

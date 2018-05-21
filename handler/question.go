@@ -37,6 +37,7 @@ type _resData struct {
 	CorrectOptions []string  `json:"correct_options"`
 }
 
+//GetQuestion :
 func GetQuestion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
@@ -45,7 +46,7 @@ func GetQuestion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	response := Response{}.Default()
 	id, _ := strconv.ParseUint(ps.ByName("id"), 10, 64)
 	question := model.Question{ID: id}
-	response.Body["question"] = question.Get()
+	response.Body["question"], _ = question.Get()
 	b, err = json.Marshal(response)
 	if err != nil {
 		fmt.Println("errors :", err)
@@ -53,6 +54,7 @@ func GetQuestion(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
+//GetQuestions :
 func GetQuestions(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error

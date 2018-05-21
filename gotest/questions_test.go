@@ -5,6 +5,17 @@ import (
 	"yeetikuserver/model"
 )
 
+func Test_Get_1(t *testing.T) {
+	q := &model.Question{ID: 4626}
+	if result, err := q.Get(); err != nil { //try a unit test on function
+		t.Error(err)
+		t.Error("根据题目ID获取题目测试没通过") // 如果不是如预期的那么就报错
+	} else {
+		t.Logf("%+v", result)
+		t.Log("根据题目ID获取题目测试通过") //记录一些你期望记录的信息
+	}
+}
+
 func Test_GetUserFavorites_3(t *testing.T) {
 	f := &model.Question{}
 	if result, total, err := f.GetUserFavorites(13, 1, 10); err != nil { //try a unit test on function
@@ -18,7 +29,7 @@ func Test_GetUserFavorites_3(t *testing.T) {
 
 func Test_GetUserWrong_1(t *testing.T) {
 	f := &model.Question{}
-	if result, total, err := f.GetUserWrong(13, 1, 10); err != nil { //try a unit test on function
+	if result, total, err := f.GetUserWrong(13, 1, 1, 10); err != nil { //try a unit test on function
 		t.Error(err)
 		t.Error("根据用户ID获取错误题目测试没通过") // 如果不是如预期的那么就报错
 	} else {
@@ -26,8 +37,6 @@ func Test_GetUserWrong_1(t *testing.T) {
 		t.Log("根据用户ID获取错误题目测试通过") //记录一些你期望记录的信息
 	}
 }
-
-
 
 // func Test_SaveExcelToDB_1(t *testing.T) {
 // 	file := "../upload/file/questions/test.xlsx"

@@ -13,6 +13,7 @@ import (
 	"golang.org/x/net/context"
 )
 
+//HeaderMiddleware :
 func HeaderMiddleware() negroni.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		// rw.Header().Set("Server", "A Go Web Server")
@@ -21,6 +22,7 @@ func HeaderMiddleware() negroni.HandlerFunc {
 	}
 }
 
+//CheckAuthMiddleware :
 func CheckAuthMiddleware() negroni.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
@@ -57,5 +59,12 @@ func CheckAuthMiddleware() negroni.HandlerFunc {
 		} else {
 			next(rw, r)
 		}
+	}
+}
+
+//TraceMiddleware :
+func TraceMiddleware() negroni.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		next(rw, r)
 	}
 }

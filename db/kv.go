@@ -74,5 +74,5 @@ func (s KVManager) Get(bucketName []byte, key string) (value []byte, err error) 
 		value = b.Get([]byte(key))
 		return nil
 	})
-	return value, nil
+	return value, err
 }

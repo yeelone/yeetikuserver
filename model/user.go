@@ -35,22 +35,22 @@ type User struct {
 //Get :
 func (u User) Get() (result User, err error) {
 	if u.ID > 0 {
-		value, err := kvdb.Get(db.USERBUCKET, string(u.ID))
-		if err == nil {
+		value, _ := kvdb.Get(db.USERBUCKET, utils.Uint2Str(u.ID))
+		if len(value) > 0 {
 			err = json.Unmarshal(value, &result)
 			return result, nil
 		}
 	}
 
-	if mydb.First(&result, u.ID).Error != nil {
-		encoded, err := json.Marshal(result)
-		if err != nil {
-			return result, nil
-		}
-		kvdb.Set(db.USERBUCKET, string(result.ID), string(encoded))
-	} else {
+	if err = mydb.First(&result, u.ID).Error; err != nil {
 		return result, errors.New("cannot find any user")
 	}
+
+	encoded, err := json.Marshal(result)
+	if err != nil {
+		return result, nil
+	}
+	kvdb.Set(db.USERBUCKET, utils.Uint2Str(result.ID), string(encoded))
 	return result, nil
 }
 

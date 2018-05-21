@@ -141,10 +141,8 @@ func (q QuestionRecord) GetByUser(userID uint64) (result interface{}, err error)
 			bankMap[items[index].ID] = items[index]
 		}
 	}
-
 	m.Banks = bankMap
 	return m, nil
-
 }
 
 //RemoveBank :
