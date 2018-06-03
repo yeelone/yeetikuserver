@@ -80,7 +80,6 @@ func UpdateExamScore(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 	r.Body.Close()
 
 	json.Unmarshal([]byte(result), &m)
-	fmt.Printf("m %+v \n", m)
 	exam := model.Exam{}
 	response := Response{}.Default()
 	if err := exam.UpdateScore(m.ID, m.Score); err != nil {
