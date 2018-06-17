@@ -62,6 +62,31 @@ func CheckAuthMiddleware() negroni.HandlerFunc {
 	}
 }
 
+//InjectContextMiddleware :
+func InjectContextMiddleware() negroni.HandlerFunc {
+	return func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+		jwtMiddleware := jwtmiddleware.New(jwtmiddleware.Options{
+			ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+				return []byte(c.Config.SecretKey), nil
+			},
+			SigningMethod: jwt.SigningMethodHS256,
+		})
+		token, _ := jwtMiddleware.Options.Extractor(r)
+		var ctx context.Context
+		if len(token) > 0 {
+			id := utils.ParseUserProperty(token)
+			ctx = utils.SaveUserInfoToContext(r.Context(), id)
+		}
+
+		if jwtMiddleware.CheckJWT(rw, r) != nil {
+			rw.Header().Set("WWW-Authenticate", "Basic realm=Restricted")
+			http.Error(rw, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+		} else {
+			next(rw, r.WithContext(ctx))
+		}
+	}
+}
+
 //TraceMiddleware :
 func TraceMiddleware() negroni.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

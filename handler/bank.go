@@ -102,7 +102,7 @@ func CreateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
-//GetRecords :
+//GetRecords : 查询用户的练习记录
 func GetRecords(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)
@@ -168,8 +168,8 @@ func UpdateBank(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	w.Write(b)
 }
 
-// GetBanks  : get bank list
-func GetBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+// GetAllBanks  : get all bank list
+func GetAllBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
 	var b []byte
@@ -181,10 +181,23 @@ func GetBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	if u.IsIDAdmin(userID) {
 		//admin can get all banks
 		response.Body["banks"], response.Body["total"] = model.Bank{}.GetAll(query.Page, query.PageSize, query.Field, query.Keyword)
-	} else {
-		//other users can only get the enable banks
-		response.Body["banks"], response.Body["total"] = model.Bank{}.GetAllEnable(query.Page, query.PageSize, query.Field, query.Keyword)
 	}
+	b, err = json.Marshal(response)
+
+	if err != nil {
+		fmt.Println("errors :", err)
+	}
+	w.Write(b)
+}
+
+// GetEnableBanks  : get bank list
+func GetEnableBanks(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	r.ParseForm()
+	var err error
+	var b []byte
+	query := parseQuery(r)
+	response := Response{}.Default()
+	response.Body["banks"], response.Body["total"] = model.Bank{}.GetAllEnable(query.Page, query.PageSize, query.Field, query.Keyword)
 
 	b, err = json.Marshal(response)
 
@@ -458,10 +471,6 @@ func GetBankTags(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	tags, total, err := bank.GetTags(id)
 
 	if err != nil {
-		userid := utils.GetUserInfoFromContext(r.Context())
-		log.WithFields(log.Fields{
-			"userID": userid,
-		}).Info("用户获取题库标签出错, err:" + err.Error())
 		response.Code = StatusNotAcceptable
 		response.Message = err.Error()
 	} else {

@@ -12,6 +12,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+//GetGroups :
 func GetGroups(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	query := parseQuery(r)
@@ -23,11 +24,12 @@ func GetGroups(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	b, err = json.Marshal(response)
 
 	if err != nil {
-		fmt.Printf("errors :", err)
+		fmt.Println("errors :", err)
 	}
 	w.Write(b)
 }
 
+//GetRelatedUsers :
 func GetRelatedUsers(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var err error
 	var b []byte

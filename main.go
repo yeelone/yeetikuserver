@@ -111,11 +111,11 @@ func main() {
 	router.DELETE("/api/v1/users", BasicAuth(h.DeleteUsers))
 	router.PUT("/api/v1/users/:id/avatar", BasicAuth(h.ChangeAvatar))
 	router.PUT("/api/v1/users/:id/password", BasicAuth(h.ChangePassword))
-	router.GET("/api/v1/users/:id/banks", h.GetUserBanks)
-	router.GET("/api/v1/users/:id/exams", h.GetUserExams)
-	router.GET("/api/v1/users/:id/records", h.GetUserRecords)
-	router.GET("/api/v1/users/:id/favorites", h.GetUserFavorites)
-	router.GET("/api/v1/users/:id/bank/:bankid/wrong", h.GetUserWrong)
+	router.GET("/api/v1/users/:id/banks", BasicAuth(h.GetUserBanks))
+	router.GET("/api/v1/users/:id/exams", BasicAuth(h.GetUserExams))
+	router.GET("/api/v1/users/:id/records", BasicAuth(h.GetUserRecords))
+	router.GET("/api/v1/users/:id/favorites", BasicAuth(h.GetUserFavorites))
+	router.GET("/api/v1/users/:id/bank/:bankid/wrong", BasicAuth(h.GetUserWrong))
 	router.POST("/api/v1/users/:id/records", BasicAuth(h.InsertRecords))
 	router.GET("/api/v1/me", BasicAuth(h.GetCurrentUser))
 
@@ -131,7 +131,8 @@ func main() {
 	router.PUT("/api/v1/tags", BasicAuth(h.SaveTag))
 	router.POST("/api/v1/tags/delete", BasicAuth(h.DeleteTags))
 
-	router.GET("/api/v1/banks", h.GetBanks)
+	router.GET("/api/v1/admin/banks", BasicAuth(h.GetAllBanks))
+	router.GET("/api/v1/banks", h.GetEnableBanks)
 	router.POST("/api/v1/banks", BasicAuth(h.CreateBank))
 	router.GET("/api/v1/banks/:id", h.GetBank)
 	router.PUT("/api/v1/banks/:id", BasicAuth(h.UpdateBank))
@@ -144,8 +145,8 @@ func main() {
 	router.DELETE("/api/v1/banks/:id/questions", BasicAuth(h.RemoveRelatedQuestions))
 	router.POST("/api/v1/banks/:id/upload", BasicAuth(h.UploadBankImage))
 	router.POST("/api/v1/banks/:id/status", BasicAuth(h.ChangeStatus))
-	router.GET("/api/v1/banks/:id/records", h.GetRecords)
-	router.GET("/api/v1/banks/:id/user/:userid/records", h.QueryUserRecords)
+	router.GET("/api/v1/banks/:id/records", BasicAuth(h.GetRecords))
+	router.GET("/api/v1/banks/:id/user/:userid/records", BasicAuth(h.QueryUserRecords))
 	router.GET("/api/v1/banktags", h.GetAllBankTags)
 	router.GET("/api/v1/banktags/:id/banks", h.GetRelatedBanks)
 	router.POST("/api/v1/banktags", BasicAuth(h.SaveBankTags))
@@ -158,7 +159,7 @@ func main() {
 
 	router.GET("/api/v1/questions", h.GetQuestions)
 	router.GET("/api/v1/questions/:id", h.GetQuestion)
-	router.GET("/api/v1/questions/:id/favorites/:userid", h.IsUserFavorites)
+	router.GET("/api/v1/questions/:id/favorites/:userid", BasicAuth(h.IsUserFavorites))
 	router.POST("/api/v1/questions/:id/favorites", BasicAuth(h.AddFavorites))
 	router.DELETE("/api/v1/questions/:id/favorites", BasicAuth(h.RemoveFavorites))
 	router.PUT("/api/v1/questions/:id/category", BasicAuth(h.ChangeCategory))
@@ -169,10 +170,10 @@ func main() {
 
 	router.POST("/api/v1/import/questions", BasicAuth(h.ImportFromExcel))
 	// router.GET("/api/v1/import/questions/users/:id/result", h.ImportQuestionResult)
-	router.GET("/api/v1/notification/users/:id/questions/import/", h.GetQuestionImportResult)
+	router.GET("/api/v1/notification/users/:id/questions/import/", BasicAuth(h.GetQuestionImportResult))
 	router.DELETE("/api/v1/notification/users/:id/questions/import/", BasicAuth(h.RemoveQuestionImportResult))
 
-	router.GET("/api/v1/feedback", h.GetFeedBacks)
+	router.GET("/api/v1/feedback", BasicAuth(h.GetFeedBacks))
 	router.POST("/api/v1/feedback", BasicAuth(h.CreateFeedBack))
 
 	router.GET("/api/v1/client/config", h.GetAppConfig)
@@ -180,15 +181,15 @@ func main() {
 	router.POST("/api/v1/client/splash/upload", BasicAuth(h.UploadClientSplashImage))
 	router.POST("/api/v1/client/icon/upload", BasicAuth(h.UploadClientIconImage))
 
-	router.GET("/api/v1/comments/all", h.GetALlComments)
+	router.GET("/api/v1/comments/all", BasicAuth(h.GetALlComments))
 	router.GET("/api/v1/comments/parent/:id", h.GetChildComments)
 	router.PUT("/api/v1/comments/:commentid/users/:userid/like", BasicAuth(h.LikeComments))
 	router.PUT("/api/v1/comments/:commentid/users/:userid/dislike", BasicAuth(h.DislikeComments))
 	router.DELETE("/api/v1/comments", BasicAuth(h.DeleteComments))
 	router.POST("/api/v1/comments", BasicAuth(h.CreateComments))
 
-	router.GET("/api/v1/exams", h.GetUserExams)
-	router.GET("/api/v1/exams/:id", h.GetExam)
+	router.GET("/api/v1/exams", BasicAuth(h.GetUserExams))
+	router.GET("/api/v1/exams/:id", BasicAuth(h.GetExam))
 	router.POST("/api/v1/exams", BasicAuth(h.CreateExam))
 	router.PUT("/api/v1/exams/:id/score", BasicAuth(h.UpdateExamScore))
 

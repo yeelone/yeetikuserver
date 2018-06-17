@@ -297,6 +297,7 @@ func AddFavorites(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	w.Write(b)
 }
 
+//IsUserFavorites :
 func IsUserFavorites(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	r.ParseForm()
 	var err error
